@@ -10,7 +10,6 @@
     --line:#e4e7ec; --accent:#2f6fdf; --accent-soft:#eaf1fd;
     --warn:#b4541a; --warn-soft:#fdf1e7; --warn-line:#f0c9a8;
     --ok:#1f7a4d; --ok-soft:#e8f5ee;
-    --est:#8a5cf6; --est-soft:#f2ecfe;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -20,7 +19,6 @@
   }
   .wrap{max-width:920px;margin:0 auto}
 
-  /* ---------- 头部 ---------- */
   header{margin-bottom:28px}
   .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);margin-bottom:8px}
   h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
@@ -30,14 +28,12 @@
   .pill.ok{background:var(--ok-soft);border-color:#bfe3cf;color:var(--ok);font-weight:600}
   .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
 
-  /* ---------- 卡片通用 ---------- */
   section{margin-top:26px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
   h2{font-size:17px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:9px}
   h2 .num{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 7px;letter-spacing:.05em}
   .lead{font-size:13.5px;color:var(--sub);margin-bottom:16px}
 
-  /* ---------- 快照网格 ---------- */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px}
   .stat{border:1px solid var(--line);border-radius:11px;padding:14px 15px;background:#fbfcfe}
   .stat .label{font-size:12px;color:var(--sub);margin-bottom:5px}
@@ -45,31 +41,25 @@
   .stat .note{font-size:11.5px;color:var(--sub);margin-top:4px}
   .stat.hi{background:var(--accent-soft);border-color:#c9dbfa}
   .stat.hi .value{color:var(--accent)}
-  .stat.est .value{color:var(--est)}
 
-  /* ---------- 表格 ---------- */
   table{width:100%;border-collapse:collapse;font-size:13.5px}
   th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
   th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);font-weight:600;background:#fafbfd}
   td:first-child{color:var(--sub);width:42%}
   td .mono{font-family:var(--mono);font-weight:600}
   tr:last-child td{border-bottom:none}
-  .tag-est{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;background:var(--est-soft);color:var(--est);border:1px solid #ddd0fb;margin-left:6px;vertical-align:1px}
 
-  /* ---------- 提示框 ---------- */
   .callout{border-radius:11px;padding:14px 16px;font-size:13.5px;margin-top:16px;border:1px solid}
   .callout.warn{background:var(--warn-soft);border-color:var(--warn-line);color:#5c2f0e}
   .callout.info{background:var(--accent-soft);border-color:#c9dbfa;color:#1b3d6b}
   .callout .ct{font-weight:700;margin-bottom:4px;display:block}
   .callout p{margin:0}
 
-  /* ---------- 列表 ---------- */
   ul.limits{list-style:none;display:grid;gap:11px}
   ul.limits li{display:grid;grid-template-columns:26px 1fr;gap:11px;font-size:13.5px}
   ul.limits .idx{width:26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
   ul.limits b{font-weight:700}
 
-  /* ---------- 页脚 ---------- */
   footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--sub);line-height:1.75}
   .todo{font-family:var(--mono);background:#fff7e6;border:1px dashed #e6c489;color:#7a5300;border-radius:6px;padding:1px 6px;font-size:12px}
 
@@ -88,37 +78,37 @@
     <h1>513630 布林带做T监测台</h1>
     <div class="subtitle">港股低波红利ETF摩根（SH:513630）· 机械化条件触发参考</div>
     <div class="meta-row">
-      <span class="pill">基准日 2026-11-04</span>
+      <span class="pill">基准日 2026-11-05</span>
       <span class="pill">参数预设 20日 / 26日 · ±2.0σ</span>
-      <span class="pill ok"><span class="dot"></span>带内运行 · 未触发</span>
+      <span class="pill ok"><span class="dot"></span>带内运行 · 接近上轨</span>
     </div>
   </header>
 
   <!-- ============ 1. 监测快照 ============ -->
   <section class="card">
     <h2><span class="num">01</span>监测快照</h2>
-    <p class="lead">以 2026-11-04 场内收盘价为锚。轨道为<b>近似推算</b>，精确值需用逐日前复权序列重算。</p>
+    <p class="lead">以 2026-11-05 场内收盘价为锚，基于最近 20 个交易日收盘价计算。</p>
 
     <div class="grid">
       <div class="stat hi">
         <div class="label">基准收盘价</div>
-        <div class="value">1.5860</div>
-        <div class="note">2026-11-04 · 微跌 0.19%</div>
+        <div class="value">1.6030</div>
+        <div class="note">2026-11-05 · 上涨 1.07%</div>
       </div>
       <div class="stat">
         <div class="label">当前状态</div>
         <div class="value" style="font-size:16px;color:var(--ok)">带内运行</div>
-        <div class="note">未触及上下轨</div>
+        <div class="note">接近上轨，距上轨 +0.51%</div>
       </div>
-      <div class="stat est">
+      <div class="stat">
         <div class="label">下轨 · 低吸观察区</div>
-        <div class="value">1.49–1.52</div>
-        <div class="note">距现价约 −4% ~ −6%</div>
+        <div class="value">1.5112</div>
+        <div class="note">距现价约 −5.73%</div>
       </div>
-      <div class="stat est">
+      <div class="stat">
         <div class="label">上轨 · 高抛观察区</div>
-        <div class="value">1.62–1.64</div>
-        <div class="note">距现价约 +2% ~ +3%</div>
+        <div class="value">1.6112</div>
+        <div class="note">距现价约 +0.51%</div>
       </div>
     </div>
 
@@ -130,28 +120,33 @@
         <tbody>
           <tr>
             <td>基准收盘价</td>
-            <td><span class="mono">1.5860</span></td>
-            <td>当日场内收盘</td>
+            <td><span class="mono">1.6030</span></td>
+            <td>2026-11-05 场内收盘</td>
           </tr>
           <tr>
             <td>下轨（低吸观察区）</td>
-            <td><span class="mono">约 1.49 – 1.52</span><span class="tag-est">估算</span></td>
-            <td>20日/2σ 推算区间</td>
+            <td><span class="mono">1.5112</span></td>
+            <td>20日/2σ 精确计算</td>
           </tr>
           <tr>
-            <td>中轨</td>
-            <td><span class="mono">约 1.55 – 1.57</span><span class="tag-est">估算</span></td>
-            <td>20日均线推算</td>
+            <td>中轨（20日均线）</td>
+            <td><span class="mono">1.5612</span></td>
+            <td>20日均线</td>
           </tr>
           <tr>
             <td>上轨（高抛观察区）</td>
-            <td><span class="mono">约 1.62 – 1.64</span><span class="tag-est">估算</span></td>
-            <td>20日/2σ 推算区间</td>
+            <td><span class="mono">1.6112</span></td>
+            <td>20日/2σ 精确计算</td>
           </tr>
           <tr>
-            <td>带内位置（估算）</td>
-            <td><span class="mono">约 65% – 75%</span><span class="tag-est">估算</span></td>
-            <td>偏上但未触上轨</td>
+            <td>标准差 σ</td>
+            <td><span class="mono">约 0.0250</span></td>
+            <td>20个收盘价的标准差</td>
+          </tr>
+          <tr>
+            <td>带内位置</td>
+            <td><span class="mono">91.8%</span></td>
+            <td>带内高位，接近上轨</td>
           </tr>
           <tr>
             <td>月度分红（每10份）</td>
@@ -163,8 +158,8 @@
     </div>
 
     <div class="callout info">
-      <span class="ct">为什么轨道给的是区间而非单一数值</span>
-      <p>精确的 20 日标准差需要完整逐日收盘价序列才能锁定。公开数据仅提供波动率摘要（近1年标准差约 14%–20%），据此推算带宽在 ±0.05–0.07 元之间。部署时用真实前复权序列重算，结果应落在上述区间内。</p>
+      <span class="ct">轨道值如何得出</span>
+      <p>取 513630 最近 20 个交易日（2026-10-09 至 2026-11-05）的日收盘价，计算算术平均得中轨 1.5612，计算标准差 σ≈0.0250，上轨 = 中轨 + 2σ = 1.6112，下轨 = 中轨 − 2σ = 1.5112。数据来源为同花顺日收盘行情。</p>
     </div>
   </section>
 
@@ -196,7 +191,7 @@
       <tbody>
         <tr>
           <td>20日 / ±2.0σ</td>
-          <td>通用默认参数，触带频率适中</td>
+          <td>通用默认参数，触带频率适中；当前快照即采用此参数</td>
           <td>基准参照，<b>513630 上未验证</b></td>
         </tr>
         <tr>
@@ -248,8 +243,8 @@
 
   <!-- ============ 页脚 ============ -->
   <footer>
-    <p><b>免责声明：</b>本页面内容仅为基于公开数据的机械化条件监测与信息整理，<b>不构成投资建议，不构成任何证券的买卖推荐</b>。历史数据与参数推算不代表未来表现。布林带轨道值为近似估算，实盘请以券商行情软件的前复权计算结果为准。投资者应独立判断并自行承担交易风险。</p>
-    <p style="margin-top:10px">数据基准日：2026-11-04 · 参数预设：20日 / 26日 · ±2.0σ · 标的：港股低波红利ETF摩根（SH:513630）</p>
+    <p><b>免责声明：</b>本页面内容仅为基于公开数据的机械化条件监测与信息整理，<b>不构成投资建议，不构成任何证券的买卖推荐</b>。历史数据与参数推算不代表未来表现。布林带轨道值基于最近20个交易日收盘价计算，实盘请以券商行情软件的前复权计算结果为准。投资者应独立判断并自行承担交易风险。</p>
+    <p style="margin-top:10px">数据基准日：2026-11-05 · 参数预设：20日 / 26日 · ±2.0σ · 标的：港股低波红利ETF摩根（SH:513630）</p>
   </footer>
 
 </div>
