@@ -1,251 +1,305 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f7f3">
 <title>513630 布林带做T监测台</title>
 <style>
-  :root{
-    --bg:#f5f6f8; --card:#ffffff; --ink:#1c2230; --sub:#6b7385;
-    --line:#e4e7ec; --accent:#2f6fdf; --accent-soft:#eaf1fd;
-    --warn:#b4541a; --warn-soft:#fdf1e7; --warn-line:#f0c9a8;
-    --ok:#1f7a4d; --ok-soft:#e8f5ee;
-    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-    background:var(--bg); color:var(--ink); line-height:1.65; padding:32px 16px 64px;
-  }
-  .wrap{max-width:920px;margin:0 auto}
+:root{
+  --bg:#f8f7f3;
+  --bg-2:#ffffff;
+  --bg-3:#f4f2ec;
+  --bg-4:#e9e7df;
+  --line:#e5e2d9;
+  --line-2:#d2cfc4;
+  --ink:#1c1c1a;
+  --ink-2:#57564f;
+  --ink-3:#74726a;
+  --low:#0d8f66;
+  --low-dim:#6fc5a8;
+  --high:#b0741a;
+  --high-dim:#ddb878;
+  --mid:#8f928b;
+  --danger:#c0452a;
+  --cost:#5d66bb;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --r-sm:3px; --r-md:6px; --r-lg:10px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:14px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px 72px;}
 
-  header{margin-bottom:28px}
-  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);margin-bottom:8px}
-  h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
-  .subtitle{color:var(--sub);font-size:14px;margin-top:6px}
-  .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
-  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:4px 11px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--sub)}
-  .pill.ok{background:var(--ok-soft);border-color:#bfe3cf;color:var(--ok);font-weight:600}
-  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+/* ---------- top bar ---------- */
+.bar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(250,249,246,.93);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.bar-in{
+  max-width:1120px;margin:0 auto;padding:10px 24px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.tick{display:flex;align-items:baseline;gap:9px;min-width:0;}
+.tick-code{font-family:var(--mono);font-size:17px;font-weight:600;letter-spacing:.01em;}
+.tick-name{font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar-sp{flex:1;}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:3px 9px;border:1px solid var(--line-2);border-radius:999px;
+  font-size:11.5px;color:var(--ink-2);background:var(--bg-2);white-space:nowrap;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--ink-3);flex:none;}
+.dot.ok{background:var(--low);box-shadow:0 0 0 3px rgba(13,143,102,.18);}
 
-  section{margin-top:26px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
-  h2{font-size:17px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:9px}
-  h2 .num{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 7px;letter-spacing:.05em}
-  .lead{font-size:13.5px;color:var(--sub);margin-bottom:16px}
+/* ---------- hero ---------- */
+.hero{padding:34px 0 6px;}
+.eyebrow{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:14px;
+}
+.state-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
+.price{font-family:var(--mono);font-size:47px;line-height:1;font-weight:600;letter-spacing:-.02em;}
+.price-sub{display:flex;gap:12px;align-items:baseline;padding-bottom:5px;font-size:12.5px;color:var(--ink-2);}
+.chg.up{color:var(--low);} .chg.down{color:var(--high);}
+.verdict{margin-left:auto;text-align:right;padding-bottom:4px;}
+.verdict-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+.verdict-value{font-size:19px;font-weight:600;line-height:1.25;}
+.v-mid{color:var(--mid);}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px}
-  .stat{border:1px solid var(--line);border-radius:11px;padding:14px 15px;background:#fbfcfe}
-  .stat .label{font-size:12px;color:var(--sub);margin-bottom:5px}
-  .stat .value{font-family:var(--mono);font-size:19px;font-weight:700;letter-spacing:-.02em}
-  .stat .note{font-size:11.5px;color:var(--sub);margin-top:4px}
-  .stat.hi{background:var(--accent-soft);border-color:#c9dbfa}
-  .stat.hi .value{color:var(--accent)}
+/* ---------- price ruler ---------- */
+.ruler-card{
+  margin-top:26px;background:var(--bg-2);
+  border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:26px 30px 20px;
+}
+.ruler-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:34px;flex-wrap:wrap;}
+.ruler-title{font-size:12px;color:var(--ink-2);letter-spacing:.04em;}
+.ruler-title b{color:var(--ink);font-weight:600;}
+.ruler-legend{display:flex;gap:16px;font-size:11.5px;color:var(--ink-3);flex-wrap:wrap;}
+.ruler-legend span{display:inline-flex;align-items:center;gap:5px;}
+.ruler-legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;}
 
-  table{width:100%;border-collapse:collapse;font-size:13.5px}
-  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
-  th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);font-weight:600;background:#fafbfd}
-  td:first-child{color:var(--sub);width:42%}
-  td .mono{font-family:var(--mono);font-weight:600}
-  tr:last-child td{border-bottom:none}
+.track{position:relative;height:56px;}
+.track-base{position:absolute;left:0;right:0;top:11px;height:2px;background:var(--line);}
+.band-zone{
+  position:absolute;top:8px;height:8px;border-radius:4px;
+  background:linear-gradient(90deg,var(--low-dim),var(--high-dim));
+  opacity:.55;
+}
+.tickmark{position:absolute;top:6px;width:1px;height:10px;background:var(--line-2);}
+.tickmark.major{height:14px;top:4px;background:var(--ink-3);}
+.tick-lab{
+  position:absolute;top:28px;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10.5px;color:var(--ink-3);white-space:nowrap;
+}
+.tick-lab.major{color:var(--ink-2);font-weight:600;}
+.marker{position:absolute;top:0;transform:translateX(-50%);z-index:5;}
+.marker-pin::before{
+  content:"";position:absolute;left:-4px;top:16px;
+  border-left:5px solid transparent;border-right:5px solid transparent;
+  border-top:7px solid var(--ink);
+}
+.marker-pin::after{
+  content:"";position:absolute;left:-1px;top:21px;bottom:6px;width:2px;background:var(--ink);
+}
+.marker-lab{
+  position:absolute;left:50%;transform:translateX(-50%);top:-16px;
+  font-family:var(--mono);font-size:12px;font-weight:600;
+  background:var(--ink);color:var(--bg);
+  padding:1px 6px;border-radius:3px;white-space:nowrap;
+}
+.marker.in-high .marker-pin::before{border-top-color:var(--high);}
+.marker.in-high .marker-pin::after{background:var(--high);}
+.marker.in-high .marker-lab{background:var(--high);color:#fff;}
 
-  .callout{border-radius:11px;padding:14px 16px;font-size:13.5px;margin-top:16px;border:1px solid}
-  .callout.warn{background:var(--warn-soft);border-color:var(--warn-line);color:#5c2f0e}
-  .callout.info{background:var(--accent-soft);border-color:#c9dbfa;color:#1b3d6b}
-  .callout .ct{font-weight:700;margin-bottom:4px;display:block}
-  .callout p{margin:0}
+/* ---------- kpi strip ---------- */
+.kpis{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  gap:0;margin-top:22px;
+  border:1px solid var(--line);border-radius:var(--r-lg);
+  background:var(--bg-2);overflow:hidden;
+}
+.kpi{padding:14px 16px;border-right:1px solid var(--line);}
+.kpi:last-child{border-right:none;}
+.kpi-k{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px;white-space:nowrap;}
+.kpi-v{font-family:var(--mono);font-size:16.5px;font-weight:600;line-height:1.2;}
+.kpi-v small{font-size:11px;font-weight:400;color:var(--ink-3);margin-left:3px;}
 
-  ul.limits{list-style:none;display:grid;gap:11px}
-  ul.limits li{display:grid;grid-template-columns:26px 1fr;gap:11px;font-size:13.5px}
-  ul.limits .idx{width:26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
-  ul.limits b{font-weight:700}
+/* ---------- section ---------- */
+.sec{margin-top:40px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.sec-head h2{font-size:14px;font-weight:600;margin:0;letter-spacing:.01em;}
+.sec-head .hint{font-size:11.5px;color:var(--ink-3);}
 
-  footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--sub);line-height:1.75}
-  .todo{font-family:var(--mono);background:#fff7e6;border:1px dashed #e6c489;color:#7a5300;border-radius:6px;padding:1px 6px;font-size:12px}
+/* ---------- trigger cards ---------- */
+.trig{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.tcard{
+  background:var(--bg-2);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:18px 20px;
+}
+.tc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.tc-title{font-size:13px;font-weight:600;}
+.tc-tag{
+  font-size:11px;padding:2px 8px;border-radius:999px;
+  border:1px solid var(--line-2);color:var(--ink-3);background:var(--bg-3);
+}
+.tc-price{font-family:var(--mono);font-size:32px;font-weight:600;line-height:1.1;margin-bottom:8px;}
+.tc-price.low{color:var(--low);}
+.tc-price.high{color:var(--high);}
+.tc-gap{font-size:12.5px;color:var(--ink-2);margin-bottom:14px;}
+.tc-gap b{font-weight:600;}
+.meter{height:4px;background:var(--bg-4);border-radius:2px;overflow:hidden;margin-bottom:9px;}
+.meter i{display:block;height:100%;border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.tc-foot{font-size:11px;color:var(--ink-3);display:flex;justify-content:space-between;gap:10px;}
 
-  @media (max-width:560px){
-    h1{font-size:21px}
-    .card{padding:18px 16px}
-    th,td{padding:8px 9px;font-size:12.5px}
-  }
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .kpis{grid-template-columns:repeat(3,1fr);}
+  .kpi:nth-child(3){border-right:none;}
+  .kpi:nth-child(-n+3){border-bottom:1px solid var(--line);}
+}
+@media (max-width:720px){
+  .wrap{padding:0 15px 56px;}
+  .bar-in{padding:9px 15px;}
+  .price{font-size:36px;}
+  .verdict{margin-left:0;text-align:left;width:100%;padding-top:10px;}
+  .ruler-card{padding:20px 16px 16px;}
+  .trig{grid-template-columns:1fr;}
+  .kpis{grid-template-columns:repeat(2,1fr);}
+  .kpi:nth-child(2n){border-right:none;}
+  .kpi:nth-child(3){border-right:1px solid var(--line);}
+  .kpi:nth-child(-n+4){border-bottom:1px solid var(--line);}
+}
 </style>
 </head>
 <body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="tick">
+      <span class="tick-code">513630</span>
+      <span class="tick-name">港股低波红利ETF摩根</span>
+    </div>
+    <div class="bar-sp"></div>
+    <span class="pill"><span class="dot ok"></span><span>腾讯行情 · 收盘</span></span>
+  </div>
+</div>
+
 <div class="wrap">
 
-  <header>
-    <div class="kicker">Tabbit · 布林带监测台</div>
-    <h1>513630 布林带做T监测台</h1>
-    <div class="subtitle">港股低波红利ETF摩根（SH:513630）· 机械化条件触发参考</div>
-    <div class="meta-row">
-      <span class="pill">基准日 2026-11-05</span>
-      <span class="pill">参数预设 20日 / 26日 · ±2.0σ</span>
-      <span class="pill ok"><span class="dot"></span>带内运行 · 接近上轨</span>
-    </div>
-  </header>
-
-  <!-- ============ 1. 监测快照 ============ -->
-  <section class="card">
-    <h2><span class="num">01</span>监测快照</h2>
-    <p class="lead">以 2026-11-05 场内收盘价为锚，基于最近 20 个交易日收盘价计算。</p>
-
-    <div class="grid">
-      <div class="stat hi">
-        <div class="label">基准收盘价</div>
-        <div class="value">1.6030</div>
-        <div class="note">2026-11-05 · 上涨 1.07%</div>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="eyebrow">布林带做T监测台 · 基准日 2026-11-05 收盘口径</div>
+    <div class="state-row">
+      <div class="price">1.603</div>
+      <div class="price-sub">
+        <span class="chg up">+1.07%</span>
+        <span>+0.017</span>
+        <span style="color:var(--ink-3)">|</span>
+        <span style="color:var(--ink-3)">复权校准 ×1.0000（前复权）</span>
       </div>
-      <div class="stat">
-        <div class="label">当前状态</div>
-        <div class="value" style="font-size:16px;color:var(--ok)">带内运行</div>
-        <div class="note">接近上轨，距上轨 +0.51%</div>
-      </div>
-      <div class="stat">
-        <div class="label">下轨 · 低吸观察区</div>
-        <div class="value">1.5112</div>
-        <div class="note">距现价约 −5.73%</div>
-      </div>
-      <div class="stat">
-        <div class="label">上轨 · 高抛观察区</div>
-        <div class="value">1.6112</div>
-        <div class="note">距现价约 +0.51%</div>
+      <div class="verdict">
+        <div class="verdict-label">当前状态</div>
+        <div class="verdict-value v-mid">带内运行</div>
       </div>
     </div>
 
-    <div style="margin-top:16px">
-      <table>
-        <thead>
-          <tr><th>项目</th><th>数值</th><th>说明</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>基准收盘价</td>
-            <td><span class="mono">1.6030</span></td>
-            <td>2026-11-05 场内收盘</td>
-          </tr>
-          <tr>
-            <td>下轨（低吸观察区）</td>
-            <td><span class="mono">1.5112</span></td>
-            <td>20日/2σ 精确计算</td>
-          </tr>
-          <tr>
-            <td>中轨（20日均线）</td>
-            <td><span class="mono">1.5612</span></td>
-            <td>20日均线</td>
-          </tr>
-          <tr>
-            <td>上轨（高抛观察区）</td>
-            <td><span class="mono">1.6112</span></td>
-            <td>20日/2σ 精确计算</td>
-          </tr>
-          <tr>
-            <td>标准差 σ</td>
-            <td><span class="mono">约 0.0250</span></td>
-            <td>20个收盘价的标准差</td>
-          </tr>
-          <tr>
-            <td>带内位置</td>
-            <td><span class="mono">91.8%</span></td>
-            <td>带内高位，接近上轨</td>
-          </tr>
-          <tr>
-            <td>月度分红（每10份）</td>
-            <td><span class="mono">0.020 元</span></td>
-            <td>2026年多月份稳定派发</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- ============ 价格标尺 ============ -->
+    <div class="ruler-card">
+      <div class="ruler-head">
+        <div class="ruler-title">轨道价位标尺 · <b>20日 / ±2.0σ</b></div>
+        <div class="ruler-legend">
+          <span><i style="background:var(--low)"></i>下轨</span>
+          <span><i style="background:var(--mid)"></i>中轨</span>
+          <span><i style="background:var(--high)"></i>上轨</span>
+          <span><i style="background:var(--cost)"></i>持仓成本</span>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-base"></div>
+        <!-- 渐变带：从下轨(19.5%) 到 上轨(82%) -->
+        <div class="band-zone" style="left: 19.5%; width: 62.5%;"></div>
+        
+        <!-- 持仓成本标记 (假设成本 1.5508，位置 44.25%) -->
+        <div style="position: absolute; top: 11px; width: 1px; height: 29px; background: var(--cost); left: 44.25%;">
+          <span style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;color:var(--cost);white-space:nowrap">成本</span>
+        </div>
+
+        <!-- 刻度 -->
+        <div id="ticks">
+          <div class="tickmark major" style="left: 0%;"></div><div class="tick-lab major" style="left: 0%;">1.480</div>
+          <div class="tickmark" style="left: 19.5%;"></div><div class="tick-lab" style="left: 19.5%;">1.511</div>
+          <div class="tickmark" style="left: 50.75%;"></div><div class="tick-lab" style="left: 50.75%;">1.561</div>
+          <div class="tickmark" style="left: 82%;"></div><div class="tick-lab" style="left: 82%;">1.611</div>
+          <div class="tickmark major" style="left: 100%;"></div><div class="tick-lab major" style="left: 100%;">1.640</div>
+        </div>
+
+        <!-- 当前价标记 (1.603 位置 76.875%) -->
+        <div class="marker" style="left: 76.875%;">
+          <div class="marker-pin"></div>
+          <div class="marker-lab">1.603</div>
+        </div>
+      </div>
     </div>
 
-    <div class="callout info">
-      <span class="ct">轨道值如何得出</span>
-      <p>取 513630 最近 20 个交易日（2026-10-09 至 2026-11-05）的日收盘价，计算算术平均得中轨 1.5612，计算标准差 σ≈0.0250，上轨 = 中轨 + 2σ = 1.6112，下轨 = 中轨 − 2σ = 1.5112。数据来源为同花顺日收盘行情。</p>
+    <!-- ============ KPI ============ -->
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-k">下轨</div><div class="kpi-v">1.5112</div></div>
+      <div class="kpi"><div class="kpi-k">中轨</div><div class="kpi-v">1.5612</div></div>
+      <div class="kpi"><div class="kpi-k">上轨</div><div class="kpi-v">1.6112</div></div>
+      <div class="kpi"><div class="kpi-k">带宽</div><div class="kpi-v">6.41<small>%</small></div></div>
+      <div class="kpi"><div class="kpi-k">带内位置</div><div class="kpi-v">91.8<small>%</small></div></div>
+      <div class="kpi"><div class="kpi-k">对成本 1.5508</div><div class="kpi-v" style="color: var(--low);">+3.36<small>%</small></div></div>
     </div>
   </section>
 
-  <!-- ============ 2. 触发逻辑 ============ -->
-  <section class="card">
-    <h2><span class="num">02</span>触发逻辑</h2>
-    <p class="lead">机械触发，只记录、不决策。</p>
-    <table>
-      <thead><tr><th>条件</th><th>动作</th></tr></thead>
-      <tbody>
-        <tr><td>收盘价 ≤ 下轨</td><td>记录一次<b>低吸观察</b>触发提示</td></tr>
-        <tr><td>收盘价 ≥ 上轨</td><td>记录一次<b>高抛观察</b>触发提示（<b>非卖出信号</b>）</td></tr>
-        <tr><td>轨道值盘中固定</td><td>基于前一交易日收盘计算，收盘后才移动</td></tr>
-      </tbody>
-    </table>
-    <div class="callout warn">
-      <span class="ct">上轨 ≠ 卖出信号</span>
-      <p>标的长期呈上行趋势，上轨卖出后常等不到回落至下轨，或补回价已高于卖出价。因此上轨仅标注为“高抛观察区”。</p>
-    </div>
-  </section>
-
-  <!-- ============ 3. 参数选择 ============ -->
-  <section class="card">
-    <h2><span class="num">03</span>参数选择的依据与核心争议</h2>
-    <p class="lead">26 日参数在 513630 上是<b>有逻辑依据的假设</b>，不是已被回测确认的结论。</p>
-
-    <table>
-      <thead><tr><th>参数</th><th>逻辑依据</th><th>证据强度</th></tr></thead>
-      <tbody>
-        <tr>
-          <td>20日 / ±2.0σ</td>
-          <td>通用默认参数，触带频率适中；当前快照即采用此参数</td>
-          <td>基准参照，<b>513630 上未验证</b></td>
-        </tr>
-        <tr>
-          <td>26日 / ±2.0σ</td>
-          <td>26个交易日≈一个自然月，与月度分红节奏吻合，可自然吸收除息缺口</td>
-          <td><b>待回测确认</b><span class="todo">需自行跑参数网格</span></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="callout warn" style="margin-top:16px">
-      <span class="ct">与 513530 页面的本质区别</span>
-      <p>513530 页面推荐 26 日参数，是因为它在 2022–2026 全样本跑出 13 轮、92% 胜率、年化超额 +0.78% 的回测结果。<b>513630 目前没有现成的公开回测</b>：上市时间 2023-11，月度分红机制直到 2025 年底才稳定，可验证的“完整先低吸后高抛”轮次可能不足 10 轮，统计置信度更弱。26 日参数是假设，需用数据补证。</p>
+  <!-- ============ 触发面板 ============ -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2>触发条件</h2>
+      <span class="hint">价格穿越轨道时自动提示，同一方向只在状态翻转时报一次</span>
     </div>
 
-    <div class="callout info">
-      <span class="ct">“先抛后接”在 513630 上需更谨慎</span>
-      <p>513630 成立以来分红再投入年化收益率约 19.46%，长期偏上行；近1年最大回撤 −16.09%，回撤耗时约 4 个月。价格跌破下轨后恢复到中轨可能耗时较长。真正值得重点观察的是<b>下轨附近的低吸机会</b>，而非对称地双向操作。</p>
+    <div class="trig">
+      <div class="tcard low">
+        <div class="tc-top">
+          <span class="tc-title">下轨 · 低吸观察区</span>
+          <span class="tc-tag">待触发</span>
+        </div>
+        <div class="tc-price low">1.5112</div>
+        <div class="tc-gap">距下轨还需下跌 <b>5.73%</b></div>
+        <div class="meter"><i style="width: 0%; background: var(--low-dim);"></i></div>
+        <div class="tc-foot">
+          <span>收盘价 ≤ 下轨</span>
+          <span>参数: 20日 / 2.0σ</span>
+        </div>
+      </div>
+
+      <div class="tcard high">
+        <div class="tc-top">
+          <span class="tc-title">上轨 · 高抛观察区</span>
+          <span class="tc-tag">待触发</span>
+        </div>
+        <div class="tc-price high">1.6112</div>
+        <div class="tc-gap">距上轨还需上涨 <b>0.51%</b></div>
+        <div class="meter"><i style="width: 99.5%; background: var(--high-dim);"></i></div>
+        <div class="tc-foot">
+          <span>收盘价 ≥ 上轨</span>
+          <span>参数: 20日 / 2.0σ</span>
+        </div>
+      </div>
     </div>
   </section>
-
-  <!-- ============ 4. 已知局限 ============ -->
-  <section class="card">
-    <h2><span class="num">04</span>已知局限</h2>
-    <p class="lead">以下每一条都会侵蚀或扭曲本页面的参考价值。</p>
-    <ul class="limits">
-      <li><span class="idx">1</span><div><b>跟踪标的与成分不同。</b>513630 跟踪标普港股通低波红利指数，与 513530 的中证港股通高股息指数不同。低波因子本身压低波动率，相同参数下带宽可能更窄，触带频率与假突破概率都会变化，2.0σ 未必最优。</div></li>
-      <li><span class="idx">2</span><div><b>QDII / 港股通机制风险未纳入模型。</b>汇率波动、交易日历差异、折溢价均未被布林带信号捕捉；低波红利策略在极端行情下“低波”属性可能阶段性失效。</div></li>
-      <li><span class="idx">3</span><div><b>成本敏感性极高。</b>513630 综合费率 0.80%（管理 0.50% + 托管 0.10% + 其他），场内交易另有佣金与买卖价差。月度级信号频率下，单次摩擦成本对最终结果的权重更高。</div></li>
-      <li><span class="idx">4</span><div><b>回测必须用分红调整后序列。</b>513630 几乎每月除息 0.002 元/份，不复权价会在除息日产生人为跳空，导致下轨被系统性低估、产生虚假“低吸信号”。<b>确认数据源已前复权/后复权，是比选参数更优先的一步。</b></div></li>
-      <li><span class="idx">5</span><div><b>轨道值盘中固定不变。</b>本页提供的是基于前一交易日收盘的静态参考位，非实时动态轨道。</div></li>
-      <li><span class="idx">6</span><div><b>回测统计缺失。</b>本页面<b>不包含</b> 513630 的轮次数、胜率、年化净超额、最差单轮等回测指标。<span class="todo">待自行回测填充</span></div></li>
-    </ul>
-  </section>
-
-  <!-- ============ 5. 与513530对照 ============ -->
-  <section class="card">
-    <h2><span class="num">05</span>与 513530 页面的对照</h2>
-    <table>
-      <thead><tr><th>维度</th><th>513530 页面</th><th>本页面（513630）</th></tr></thead>
-      <tbody>
-        <tr><td>回测结论</td><td>21组参数全样本回测，26日胜率 92%</td><td><b>无现成公开回测</b>，26日为逻辑推断</td></tr>
-        <tr><td>数据基础</td><td>完整逐日序列 + 参数网格</td><td>价格、分红、波动率摘要；缺逐日回测</td></tr>
-        <tr><td>核心用途</td><td>展示“某参数过去表现如何”</td><td>展示“当前价位哪些值得观察”</td></tr>
-        <tr><td>置信度</td><td>中等（受样本期限制）</td><td><b>低</b>，需自行补足统计证据</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ============ 页脚 ============ -->
-  <footer>
-    <p><b>免责声明：</b>本页面内容仅为基于公开数据的机械化条件监测与信息整理，<b>不构成投资建议，不构成任何证券的买卖推荐</b>。历史数据与参数推算不代表未来表现。布林带轨道值基于最近20个交易日收盘价计算，实盘请以券商行情软件的前复权计算结果为准。投资者应独立判断并自行承担交易风险。</p>
-    <p style="margin-top:10px">数据基准日：2026-11-05 · 参数预设：20日 / 26日 · ±2.0σ · 标的：港股低波红利ETF摩根（SH:513630）</p>
-  </footer>
 
 </div>
 </body>
